@@ -1,0 +1,26 @@
+import ( Cors, create ) from "main.zen"
+
+Cors c = create()
+
+c.setOrigin("http://localhost:5173")
+c.setMethods("GET, POST, PUT, DELETE, OPTIONS")
+c.setHeaders("Content-Type, Authorization")
+c.setExposeHeaders("X-Request-ID")
+c.setCredentials(true)
+c.setMaxAge(86400)
+
+HttpServer server = httpServer.create(8080)
+
+if (server.listen() == 1) {
+  while (true) {
+    HttpRequest req = server.next()
+
+    c.apply(req)
+
+    if (req.method == "OPTIONS") {
+      continue
+    }
+
+    req.send("Hello from CORS test")
+  }
+}

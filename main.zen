@@ -1,0 +1,94 @@
+/*
+ * CORS.zen v1.0.0
+ * Cross-Origin Resource Sharing utilities for Zen HTTP servers.
+ * author Jishith M P
+ */
+
+struct Cors {
+  string origin,
+  string methods,
+  string headers,
+  string exposeHeaders,
+  bool credentials,
+  int maxAge
+
+  setOrigin(string origin) void {
+    this.origin = origin
+  }
+
+  setMethods(string methods) void {
+    this.methods = methods
+  }
+
+  setHeaders(string headers) void {
+    this.headers = headers
+  }
+
+  setExposeHeaders(string headers) void {
+    this.exposeHeaders = headers
+  }
+
+  setCredentials(bool credentials) void {
+    this.credentials = credentials
+  }
+
+  setMaxAge(int seconds) void {
+    this.maxAge = seconds
+  }
+
+  apply(HttpRequest req) void {
+    req.setHeader(
+      "Access-Control-Allow-Origin",
+      this.origin
+    )
+
+    req.setHeader(
+      "Access-Control-Allow-Methods",
+      this.methods
+    )
+
+    req.setHeader(
+      "Access-Control-Allow-Headers",
+      this.headers
+    )
+
+    if (this.exposeHeaders != "") {
+      req.setHeader(
+        "Access-Control-Expose-Headers",
+        this.exposeHeaders
+      )
+    }
+
+    if (this.credentials) {
+      req.setHeader(
+        "Access-Control-Allow-Credentials",
+        "true"
+      )
+    }
+
+    if (this.maxAge > 0) {
+      req.setHeader(
+        "Access-Control-Max-Age",
+         String(this.maxAge)
+      )
+    }
+
+    if (req.method == "OPTIONS") {
+      req.status(204)
+      req.send("")
+    }
+  }
+}
+
+fn create() Cors {
+  return {
+    origin: "*",
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    headers: "Content-Type, Authorization",
+    exposeHeaders: "",
+    credentials: false,
+    maxAge: 86400
+  }
+}
+
+export(Cors, create)
