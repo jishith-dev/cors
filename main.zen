@@ -37,49 +37,25 @@ struct Cors {
   }
 
   apply(HttpRequest req) void {
-    req.setHeader(
-      "Access-Control-Allow-Origin",
-      this.origin
-    )
+  
+  req.setHeader(
+    "Access-Control-Allow-Origin",
+    this.origin
+  )
 
-    req.setHeader(
-      "Access-Control-Allow-Methods",
-      this.methods
-    )
+ 
+  req.setHeader(
+    "Access-Control-Allow-Methods",
+    this.methods
+  )
 
-    req.setHeader(
-      "Access-Control-Allow-Headers",
-      this.headers
-    )
+  req.setHeader(
+    "Access-Control-Allow-Headers",
+    this.headers
+  )
 
-    if (this.exposeHeaders != "") {
-      req.setHeader(
-        "Access-Control-Expose-Headers",
-        this.exposeHeaders
-      )
-    }
-
-    if (this.credentials) {
-      req.setHeader(
-        "Access-Control-Allow-Credentials",
-        "true"
-      )
-    }
-
-    if (this.maxAge > 0) {
-      req.setHeader(
-        "Access-Control-Max-Age",
-         String(this.maxAge)
-      )
-    }
-
-    if (req.method == "OPTIONS") {
-      req.status(204)
-      req.send("")
-    }
-  }
+ }
 }
-
 fn create() Cors {
   return {
     origin: "*",
