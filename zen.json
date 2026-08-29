@@ -4,6 +4,6 @@
   "author": "Jishith-dev",
   "repo": "https://github.com/Jishith-dev/cors",
   "description": "Standalone CORS library for Zen HTTP servers. Configure origins, methods, headers, credentials, exposed headers, and preflight caching with a simple API. No framework dependency.",
-  "bin": "main.zen",
+  "bin": "lib.zen",
   "dependencies": {}
 }
