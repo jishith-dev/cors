@@ -1,0 +1,47 @@
+import (Cors) from "lib.zen"
+
+Cors cDefault
+
+Cors cCustom
+cCustom.setOrigin("https://example.com")
+cCustom.setMethods("GET, POST, PUT, DELETE")
+cCustom.setHeaders("Content-Type")
+cCustom.setExposeHeaders("X-Custom-Header")
+cCustom.setCredentials(true)
+cCustom.setMaxAge(3600)
+
+HttpServer server = httpServer.create(8080)
+
+if (server.listen() == 1) {
+
+    screen("Zen listening on :8080")
+
+    while (true) {
+
+        HttpRequest req = server.next()
+
+        screen(req.method + " " + req.path)
+
+        if (req.path == "/default") {
+            cDefault.apply(req)
+            req.status(200)
+            req.send("DEFAULT")
+        } else if (req.path == "/custom") {
+            cCustom.apply(req)
+            req.status(200)
+            req.send("CUSTOM")
+        } else if (req.method == "OPTIONS") {
+            cCustom.apply(req)
+            req.status(204)
+            req.send("")
+        } else {
+            req.status(404)
+            req.send("Not found")
+        }
+
+    }
+
+} else {
+
+    screen("Failed to start server")
+}

@@ -1,33 +1,30 @@
 # CORS for Zen
 
+Author: Jishith-dev
+
 A standalone CORS library for Zen HTTP servers.
 
-CORS provides a simple API for configuring cross-origin access, allowed methods and headers, credentials, exposed headers, and preflight caching.
+Provides a simple API for configuring cross-origin access, allowed methods and headers, credentials, exposed headers, and preflight caching.
 
 ## Installation
-
-Install the package using the Zen package manager:
 
     zen install cors
 
 ## Import
 
-    import (Cors, create) from "cors"
+    import (Cors) from "cors"
 
 ## Usage
 
-Create a CORS configuration with `create()`:
+    import (Cors) from "cors"
 
-    import (Cors, create) from "cors"
-
-    Cors cors = create()
-
-    cors.allow("*")
-    cors.methods("GET, POST, PUT, DELETE, OPTIONS")
-    cors.headers("Content-Type, Authorization")
-    cors.expose("X-Request-ID")
-    cors.credentials(true)
-    cors.maxAge(86400)
+    Cors cors
+    cors.setOrigin("*")
+    cors.setMethods("GET, POST, PUT, DELETE, OPTIONS")
+    cors.setHeaders("Content-Type, Authorization")
+    cors.setExposeHeaders("X-Request-ID")
+    cors.setCredentials(true)
+    cors.setMaxAge(86400)
 
 Apply the configuration to an incoming request:
 
@@ -35,16 +32,15 @@ Apply the configuration to an incoming request:
 
 ## Complete Example
 
-    import (Cors, create) from "cors"
+    import (Cors) from "cors"
 
-    Cors cors = create()
-
-    cors.allow("http://localhost:5173")
-    cors.methods("GET, POST, PUT, DELETE, OPTIONS")
-    cors.headers("Content-Type, Authorization")
-    cors.expose("X-Request-ID")
-    cors.credentials(true)
-    cors.maxAge(86400)
+    Cors cors
+    cors.setOrigin("http://localhost:5173")
+    cors.setMethods("GET, POST, PUT, DELETE, OPTIONS")
+    cors.setHeaders("Content-Type, Authorization")
+    cors.setExposeHeaders("X-Request-ID")
+    cors.setCredentials(true)
+    cors.setMaxAge(86400)
 
     HttpServer server = httpServer.create(8080)
 
@@ -60,95 +56,47 @@ Apply the configuration to an incoming request:
         }
     }
 
+## Defaults
+
+`Cors` works out of the box with no setup:
+
+    Cors cors
+    cors.apply(req)
+
+Defaults:
+
+- Origin: `*`
+- Methods: `GET, POST, PUT, DELETE, OPTIONS`
+- Headers: `Content-Type, Authorization`
+- Expose headers: none
+- Credentials: `false`
+- Max age: `86400`
+
 ## Configuration
 
-### Origin
-
-Allow a specific origin:
-
-    cors.allow("http://localhost:5173")
-
-Allow any origin:
-
-    cors.allow("*")
-
-### Methods
-
-Configure allowed HTTP methods as a single comma-separated string:
-
-    cors.methods("GET, POST, PUT, DELETE, OPTIONS")
-
-### Headers
-
-Configure allowed request headers as a single comma-separated string:
-
-    cors.headers("Content-Type, Authorization")
-
-### Exposed Headers
-
-Configure exposed response headers:
-
-    cors.expose("X-Request-ID")
-
-Multiple headers can be provided as a comma-separated string:
-
-    cors.expose("X-Request-ID, X-Request-Time")
-
-### Credentials
-
-Enable credentials:
-
-    cors.credentials(true)
-
-### Preflight Cache
-
-Set the preflight cache duration in seconds:
-
-    cors.maxAge(86400)
-
-## Preflight Requests
-
-For a request such as:
-
-    OPTIONS /test
-    Origin: http://localhost:5173
-    Access-Control-Request-Method: POST
-    Access-Control-Request-Headers: Content-Type
-
-`cors.apply(req)` handles the CORS preflight response.
-
-Example response:
-
-    HTTP/1.1 204 OK
-    Access-Control-Allow-Origin: http://localhost:5173
-    Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
-    Access-Control-Allow-Headers: Content-Type, Authorization
-    Access-Control-Expose-Headers: X-Request-ID
-    Access-Control-Allow-Credentials: true
-    Access-Control-Max-Age: 86400
-
-## API
-
-| Function | Description |
+| Method | Description |
 |---|---|
-| `create()` | Creates a new CORS configuration |
-| `cors.allow(origin)` | Sets the allowed origin |
-| `cors.methods(methods)` | Sets allowed methods |
-| `cors.headers(headers)` | Sets allowed request headers |
-| `cors.expose(headers)` | Sets exposed response headers |
-| `cors.credentials(bool)` | Enables or disables credentials |
-| `cors.maxAge(seconds)` | Sets the preflight cache duration |
-| `cors.apply(req)` | Applies CORS handling to an `HttpRequest` |
+| `setOrigin(origin)` | Sets the allowed origin, e.g. `"*"` or `"http://localhost:5173"` |
+| `setMethods(methods)` | Sets allowed HTTP methods as a comma-separated string |
+| `setHeaders(headers)` | Sets allowed request headers as a comma-separated string |
+| `setExposeHeaders(headers)` | Sets exposed response headers |
+| `setCredentials(bool)` | Enables or disables credentials |
+| `setMaxAge(seconds)` | Sets the preflight cache duration in seconds |
+| `apply(req)` | Applies all configured CORS headers to an `HttpRequest` |
+
+`setExposeHeaders` and `setCredentials` only emit their headers when set — an empty expose string or `false` credentials are silently skipped.
 
 ## Framework Independent
 
-CORS is a standalone library for Zen.
+CORS is a standalone library for Zen. It is not tied to Drift or any other HTTP framework and works directly with Zen's `HttpRequest` API.
 
-It is not tied to Drift or any other HTTP framework and works directly with Zen's `HttpRequest` API.
+## License
+
+MIT
 
 ## Package Information
 
 - Name: `cors`
-- Version: `1.0.0`
+- Version: `1.0.1`
 - Author: Jishith-dev
 - Repository: https://github.com/Jishith-dev/cors
